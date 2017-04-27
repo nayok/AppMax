@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Appbie</string>
     <string name="login">เข้าสู่ระบบ</string>
+    <string name="register">สมัครสมาชิก</string>
+    <string name="user">user</string>
+    <string name="password">password</string>
+    <string name="regis">สมัครจร้า</string>
+    <string name="signup">signup</string>
+    <string name="name">name</string>
 </resources>

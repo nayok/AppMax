@@ -17,7 +17,8 @@ import com.squareup.okhttp.Response;
 public class GetProductWhereQR extends AsyncTask<String, Void, String>{
 
     private Context context ; // context ใช้ในการสื่อสาร
-    private static final String urlPHP = "http://swiftcodingthai.com/cph/getProductWhereQRSupermax.php";
+    //private static final String urlPHP = "http://swiftcodingthai.com/cph/getProductWhereQRSupermax.php";
+
 
 
 
@@ -36,10 +37,10 @@ public class GetProductWhereQR extends AsyncTask<String, Void, String>{
             OkHttpClient okHttpClient = new OkHttpClient();
             RequestBody requestBody = new FormEncodingBuilder()
                     .add("isAdd", "true")
-                    .add("QR_code", params[0])
+                    .add(params[0], params[1])
                     .build();
             Request.Builder builder = new Request.Builder();
-            Request request = builder.url(urlPHP).post(requestBody).build();
+            Request request = builder.url(params[2]).post(requestBody).build();
             Response response = okHttpClient.newCall(request).execute();
             return response.body().string();
 

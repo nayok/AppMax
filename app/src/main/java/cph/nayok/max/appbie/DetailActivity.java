@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageView imageView;
     private TextView nameTextView, dateTextView,
@@ -28,6 +31,83 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         controller();
 
         getValueFromIntent();
+
+        //ShowViwe
+        showViwe();
+
+    }
+
+    private void showViwe() {
+
+        MyConstant myConstant = new MyConstant();
+        String[] columnProduct = myConstant.getColumnProduct();
+        String urlPHP = myConstant.getUrlGetProductWhereQR();
+
+
+
+        try {
+
+            GetProductWhereQR getProductWhereQR = new GetProductWhereQR(DetailActivity.this);
+            getProductWhereQR.execute(columnProduct[2], qrCodeString,urlPHP);
+
+
+            String strJSON = getProductWhereQR.get();
+            Log.d(tag, "JSON ==>" + strJSON);
+
+            JSONArray jsonArray = new JSONArray(strJSON);
+            String[] resultStings = new String[columnProduct.length];
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            for (int i=0;i<resultStings.length;i++) {
+
+                resultStings[i] = jsonObject.getString(columnProduct[i]);
+                Log.d(tag, "result(" + i + ") ==>" + resultStings[i]);
+
+
+            }
+            //อาจจะ eror ส่วนตัวเลขนะจร๊
+            nameTextView.setText(resultStings[1]);
+            dateTextView.setText(resultStings[5]);
+            detailTextView.setText(resultStings[4]);
+
+            //ดึงชื่อผู้อื่นมา
+            receiveNameTextView.setText(findNameReceive(resultStings[3]));
+
+
+
+        } catch (Exception e) {
+            Log.d(tag, "e showViwe ==>" + e.toString());
+
+        }
+    }
+
+    private String findNameReceive(String idReceive) {
+
+        String tag2 = "28AprilV2";
+        MyConstant myConstant = new MyConstant();
+
+
+        try {
+
+            GetProductWhereQR getProductWhereQR = new GetProductWhereQR(DetailActivity.this);
+            getProductWhereQR.execute("id", idReceive, myConstant.getUrlGetProductWhereQR());
+            String strJSON = getProductWhereQR.get();
+            Log.d(tag2, "JSON ==>" + strJSON);
+
+            JSONArray jsonArray = new JSONArray(strJSON);
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            return jsonObject.getString("Name");
+
+
+
+
+
+
+        } catch (Exception e) {
+            Log.d(tag2, "e findName ==>" + e.toString());
+            return null;
+
+        }
+
 
     }
 

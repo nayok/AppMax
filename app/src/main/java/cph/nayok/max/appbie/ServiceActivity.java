@@ -16,7 +16,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class ServiceActivity extends AppCompatActivity {
+public class ServiceActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView textView;
     private ImageView imageView;
     private ListView listView;
@@ -37,9 +37,35 @@ public class ServiceActivity extends AppCompatActivity {
 
         createListView();
 
+        controller();
+
 
 
     } //Main Class
+
+    @Override
+    protected void onActivityResult(int requestCode,
+                                    int resultCode,
+                                    Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            String result = data.getStringExtra("SCAN_RESULT");
+            Log.d("28AprilV3", "Result From Scan ==>" + result);
+
+            Intent intent = new Intent(ServiceActivity.this, DetailActivity.class);
+            intent.putExtra("QRcode", result);
+            startActivity(intent);
+
+        }
+
+    }
+
+    private void controller() {
+        imageView.setOnClickListener(ServiceActivity.this);
+
+
+    }
 
     private void createListView() {
         final String tag = "27AprilV2";
@@ -104,6 +130,28 @@ public class ServiceActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.txtName);
         imageView = (ImageView) findViewById(R.id.imvQR);
         listView = (ListView) findViewById(R.id.livProduct);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        String tag = "28AprilV3";
+
+        if (v ==imageView) {
+
+            try {
+
+                Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                intent.putExtra("SCAN MODE", "QR_CODE_MODE");
+                startActivityForResult(intent, 7);
+
+
+            } catch (Exception e) {
+                Log.d(tag, "e onClick ==> " + e.toString());
+
+            }
+        }
 
     }
 }  //Main Class

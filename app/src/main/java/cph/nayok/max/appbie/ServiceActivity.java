@@ -59,6 +59,8 @@ public class ServiceActivity extends AppCompatActivity implements View.OnClickLi
 
         }
 
+
+
     }
 
     private void controller() {

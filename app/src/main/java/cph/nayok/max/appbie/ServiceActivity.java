@@ -1,9 +1,12 @@
 package cph.nayok.max.appbie;
 
+import android.content.Intent;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,7 +42,7 @@ public class ServiceActivity extends AppCompatActivity {
     } //Main Class
 
     private void createListView() {
-        String tag = "27AprilV2";
+        final String tag = "27AprilV2";
         String urlPHP = "http://swiftcodingthai.com/cph/getProduct.php";
 
         try {
@@ -59,14 +62,28 @@ public class ServiceActivity extends AppCompatActivity {
             for (int i=0;i<jsonArray.length();i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 nameStrings[i] = jsonObject.getString("Name");
-                dateStrings[i] = jsonObject.getString("Date");
-                detailStrings[i] = jsonObject.getString("Detail");
+                dateStrings[i] = jsonObject.getString("Date_Receive");
+                detailStrings[i] = jsonObject.getString("Description");
                 qrCodeStrings[i] = jsonObject.getString("QR_code");
             }
 
             MyAdapter myAdapter = new MyAdapter(ServiceActivity.this, nameStrings,
                     dateStrings, detailStrings);
             listView.setAdapter(myAdapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Log.d(tag, "You Click ==>" + qrCodeStrings[position]);
+
+                    Intent intent = new Intent(ServiceActivity.this, DetailActivity.class);
+                    intent.putExtra("QRcode", qrCodeStrings[position]);
+                    startActivity(intent);
+
+
+                }
+            });
 
 
 
